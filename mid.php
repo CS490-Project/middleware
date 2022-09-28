@@ -2,12 +2,10 @@
 
 
 //get ucid and password from index.php (decode json)
-$frontresponse = json_decode(curl_exec($ch));
-$frontpassword = $frontresponse->{'password'};
-
+$frontpassword = $_POST["password"];
 
 //curl post to db.php
-$data = json_encode(['ucid'=>$_POST["ucid"]]);
+$data = ['ucid'=>$_POST["ucid"]];
 $defaults = array(
     CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/users/get_user.php',
     CURLOPT_POST => true, 
