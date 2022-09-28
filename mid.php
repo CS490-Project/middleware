@@ -34,7 +34,7 @@ if (password_verify($response->{'password'}, $frontpassword)){
 }
 else{
     http_response_code(404);
-    echo "Invalid credentials."
+    echo "Invalid credentials.";
     die();
 }
 
