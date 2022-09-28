@@ -22,15 +22,15 @@ curl_close($ch);
 
 
 //if username doesn't exist, echo 'invalid creds'
-/*if ($response == "User not found."){ //check syntax
+if ($response == "User not found."){ //check syntax
     echo "Invalid credentials."
 }
-*/
+
 
 //unhash password and compare to password gotten from post request
 //json to index.php
-if (password_verify($response->{'password'}, $frontpassword)){
-    echo json_encode($results);
+if (password_verify($response->{'password'}, $frontpassword)){ //check syntax
+    echo json_encode($role); //send role (teacher/student) to front
 }
 else{
     http_response_code(404);
