@@ -1,33 +1,15 @@
 <?php
 
-//any data i need that goes front to back, I NEED TO INTERCEPT
-    //points
-    //(real) funct name
-    //raw text of student exam
-    //test cases (in + out) for each (real) funct name
-        //do i tho? i may just pull from backend
-
-
-/*
- *
- *Use Case #1 (this is correct)
- *
- */
-
-//TEACHER CREATING QUESTIONS (send questions to back)
-//recieve from front
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-
-//send to back
 if ($data['description']){
 
     $options = array(
-        CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/questions/create_question.php', //correct url
+        CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/questions/create_question.php',
         CURLOPT_POST => true, 
-        CURLOPT_POSTFIELDS => json_encode($data), //front must do this too
-        CURLOPT_HTTPHEADER, array('Content-Type:application/json'), //front must do this too
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER, array('Content-Type:application/json'), 
         CURLOPT_RETURNTRANSFER => true
     );
     
