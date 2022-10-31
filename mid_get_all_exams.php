@@ -4,7 +4,7 @@ $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
 $options = array(
-    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/all_exams.php', //correct url
+    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/all_exams.php',
     CURLOPT_POST => true, 
     CURLOPT_POSTFIELDS => json_encode($data),
     CURLOPT_HTTPHEADER, array('Content-Type:application/json'),
