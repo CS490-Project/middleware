@@ -3,11 +3,10 @@
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-if ($data['teacher_id']){ //i send teacher id
-    //all_questions file
+if ($data['teacher_id']){
     
     $options = array(
-    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/get_ungraded_exams.php', //correct url
+    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/get_ungraded_exams.php',
     CURLOPT_POST => true, 
     CURLOPT_POSTFIELDS => json_encode($data),
     CURLOPT_HTTPHEADER, array('Content-Type:application/json'),
