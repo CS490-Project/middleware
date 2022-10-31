@@ -76,10 +76,12 @@ foreach($answers as $ans){
 
     //check if student's fname matches real fname, else replace
     $a = $result['student_answer'];
+    $b = $a;
     if ($student_fname !== $result['fname']){
         $ptsdeducted += 5;
         $b = preg_replace('/'.$student_fname.'/', $result['fname'], $a);
     }
+    
     
     //calculate points per test case
     $ptspertc = ($result["value"]-5)/2; //assume name=5pts, #tc=2
@@ -105,14 +107,14 @@ foreach($answers as $ans){
         //compare actual to expected, deduct pts
         if ($output[0] !== $expected_output){
             $ptslost = $ptspertc;
-            $run .= "Error ";
         }
-        else{
-            $run .= "{$output[0]} ";
-        }
+        
+
+
 
         //add to strings to send to front
         $expected .= "{$given_input}->{$expected_output} ";
+        $run .= "{$output[0]} ";
         $ptsdeducted += $ptslost;
 
         //delete file
