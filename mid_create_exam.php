@@ -1,27 +1,13 @@
 <?php
 
 
-
-
-
-/*
- *
- *Use Case #2 (this needs work)
- *
- */
-
-
-
-
-
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-if ($data['teacher_id']){ //i send teacher id
-    //all_questions file
+if ($data['teacher_id']){ 
     
     $options = array(
-    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/create_exam.php', //correct url
+    CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/create_exam.php',
     CURLOPT_POST => true, 
     CURLOPT_POSTFIELDS => json_encode($data),
     CURLOPT_HTTPHEADER, array('Content-Type:application/json'),
@@ -39,6 +25,5 @@ if ($data['teacher_id']){ //i send teacher id
     curl_close($ch);
     echo $response;
 
-    //put everything in if statement
 }
 
