@@ -1,20 +1,15 @@
 <?php
 
-
-//SAVE EXAM IN BACK WHEN STUDENT SUBMITS
-//recieve from front
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-
-//send to back
-if ($data['exam_id'] && $data['student_id']){ //change this
+if ($data['exam_id'] && $data['student_id']){ 
 
     $options = array(
         CURLOPT_URL => 'https://afsaccess4.njit.edu/~gc348/CS490/backend/exams/submit_exam.php',
         CURLOPT_POST => true, 
-        CURLOPT_POSTFIELDS => json_encode($data), //front must do this too
-        CURLOPT_HTTPHEADER, array('Content-Type:application/json'), //front must do this too
+        CURLOPT_POSTFIELDS => json_encode($data), 
+        CURLOPT_HTTPHEADER, array('Content-Type:application/json'),
         CURLOPT_RETURNTRANSFER => true
     );
     
