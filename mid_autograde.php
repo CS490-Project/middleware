@@ -36,10 +36,9 @@ foreach($answers as $ans){
     $result["description"] = $ans['description'];
     $result["student_answer"] = $ans['answer'];
     $result["fname"] = $ans['fname'];
-    $result["value"] = intval($ans['value']);
+    $result["value"] = floatval($ans['value']);
     $result["question_id"] = $ans['question_id'];
-
-    $result["tests"] = []; //expected, run, ptspossible, ptsdeducted
+    $result["constraints"] = $ans['constraints'];
 
     //request testcases from back
     $test_case_request = array(
@@ -62,29 +61,64 @@ foreach($answers as $ans){
     
     
 
-    //create vars to add to array 
-    $expected = "{$result['fname']} ";
-    $run = "";
-    $ptspossible = $result["value"];
-    $ptsdeducted = 0;
 
     //get student's fname
     $student_fname = substr($result["student_answer"], 0, strpos($result["student_answer"], "("));
     $student_fname = preg_replace("/def /", "", $student_fname);
-    $run .= "{$student_fname} ";
 
 
     //check if student's fname matches real fname, else replace
     $a = $result['student_answer'];
     $b = $a;
+    $fnamededuction = 0;
     if ($student_fname !== $result['fname']){
-        $ptsdeducted += 5;
+        $fnamededuction = 5;
         $b = preg_replace('/'.$student_fname.'/', $result['fname'], $a);
     }
     
     
-    //calculate points per test case
-    $ptspertc = ($result["value"]-5)/2; //assume name=5pts, #tc=2
+    $test_case_results = array(
+        [
+            "test_case_id" => NULL,
+            "expected" => "fname->'{$result['fname']}'", 
+            "actual" => "'{$student_fname}'",
+            "pts_possible" => 5.00,
+            "pts_earned" => 5.00 - $fnamededuction
+            
+        ]
+    );
+
+    $ptspertc = 0;
+    //check constraints
+    if($result['constraints'] != null){
+        //check if constraint is satisfied
+        $actual = "None";
+        $ptsdeducted = 5.0;
+        if ($result['constraints'] == 'Recursion'){
+            if (substr_count($result['student_answer'], $student_fname) == 2){
+                $actual = "Recursion";
+                $ptsdeducted = 0.0;
+            }
+        }
+        else{ //if while or for loop
+            if (substr_count($result['student_answer'], $result['constraints']) >= 1){
+                $actual = "{$result['constraints']}";
+                $ptsdeducted = 0.0;
+            }
+        }
+
+        array_push($test_case_results, [
+            "test_case_id" => NULL,
+            "expected" => "constraint->'{$result['constraints']}'", 
+            "actual" => "'{$actual}'",
+            "pts_possible" => 5.00,
+            "pts_earned" => 5.00 - $ptsdeducted
+        ]);
+        $ptspertc = ($result["value"]-10)/count($test_cases); //assume name=5pts, constraint=5pts
+    }
+    else{
+        $ptspertc = ($result["value"]-5)/count($test_cases); //assume name=5pts
+    }
 
 
     //run function for each testcase
@@ -113,9 +147,19 @@ foreach($answers as $ans){
 
 
         //add to strings to send to front
-        $expected .= "{$given_input}->{$expected_output} ";
-        $run .= "{$output[0]} ";
-        $ptsdeducted += $ptslost;
+        $expected = "{$given_input}->{$expected_output}";
+        $run = "{$output[0]}";
+        
+
+        $test_case_res= array(
+            "test_case_id" => $tc["id"],
+            "expected" => $expected, 
+            "actual" => $run, 
+            "pts_possible" => $ptspertc,
+            "pts_earned" => $ptspertc - $ptslost
+        );
+
+        array_push($test_case_results, $test_case_res);
 
         //delete file
         unlink("run.py");     
@@ -123,12 +167,7 @@ foreach($answers as $ans){
     
     
     //add testcase results to testcase array
-    $result["tests"] = array(
-        'expected' => $expected,
-        'run' => $run,
-        'ptspossible' => $ptspossible,
-        'ptsdeducted' => $ptsdeducted
-    );
+    $result["test_cases"] = $test_case_results;
 
     //add testcase array to (final) question array
     array_push($graded_answers, $result);
